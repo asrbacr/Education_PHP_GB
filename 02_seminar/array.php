@@ -30,19 +30,31 @@ $users = [
         'name' => 'Вася',
         'age' => 18,
         'gender' => 'male',
+        'hobbies' => [
+            'футбол',
+            'плавание',
+        ],
     ],
     [
         'name' => 'Петя',
         'age' => 19,
         'gender' => 'male',
+        'hobbies' => [
+            'футбол',
+            'плавание',
+        ],
     ],
     [
         'name' => 'Маша',
         'age' => 20,
         'gender' => 'female',
+        'hobbies' => [
+            'футбол',
+            'плавание',
+        ],
     ],
 ];
 
 foreach ($users as $user) {
     echo $user['name'] . PHP_EOL;
-}
+};
