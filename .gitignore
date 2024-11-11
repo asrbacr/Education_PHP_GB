@@ -1,1 +1,8 @@
 .idea
+
+# vendor это служебная папка для работы composer
+# подгрузить зависимости можно командой composer dump-autoload
+# подтянуть более новые версии библиотек composer update
+vendor
+composer.lock
+composer.phar
