@@ -1,40 +1,47 @@
 <?php
 
 // function readAllFunction(string $address) : string {
-function readAllFunction(array $config) : string {
+function readAllFunction(array $config): string
+{
     $address = $config['storage']['address'];
 
     if (file_exists($address) && is_readable($address)) {
         $file = fopen($address, "rb");
-        
-        $contents = ''; 
-    
+
+        $contents = '';
+
         while (!feof($file)) {
             $contents .= fread($file, 100);
         }
-        
+
         fclose($file);
         return $contents;
-    }
-    else {
+    } else {
         return handleError("Файл не существует");
     }
 }
 
 // function addFunction(string $address) : string {
-function addFunction(array $config) : string {
+function addFunction(array $config): string
+{
     $address = $config['storage']['address'];
 
     $name = readline("Введите имя: ");
+    if (!validateName($name)) {
+        return handleError("Неверный формат имени");
+    }
+
     $date = readline("Введите дату рождения в формате ДД-ММ-ГГГГ: ");
-    $data = $name . ", " . $date . "\r\n";
+    if (!validateData($date)) {
+        return handleError("Неверный формат даты");
+    }
+    $data = "$name,  $date\r\n";
 
     $fileHandler = fopen($address, 'a');
 
-    if(fwrite($fileHandler, $data)){
-        return "Запись $data добавлена в файл $address"; 
-    }
-    else {
+    if (fwrite($fileHandler, $data)) {
+        return "Запись $data добавлена в файл $address";
+    } else {
         return handleError("Произошла ошибка записи. Данные не сохранены");
     }
 
@@ -42,34 +49,37 @@ function addFunction(array $config) : string {
 }
 
 // function clearFunction(string $address) : string {
-function clearFunction(array $config) : string {
+function clearFunction(array $config): string
+{
     $address = $config['storage']['address'];
 
     if (file_exists($address) && is_readable($address)) {
         $file = fopen($address, "w");
-        
+
         fwrite($file, '');
-        
+
         fclose($file);
         return "Файл очищен";
-    }
-    else {
+    } else {
         return handleError("Файл не существует");
     }
 }
 
-function helpFunction() {
+function helpFunction()
+{
     return handleHelp();
 }
 
-function readConfig(string $configAddress): array|false{
+function readConfig(string $configAddress): array|false
+{
     return parse_ini_file($configAddress, true);
 }
 
-function readProfilesDirectory(array $config): string {
+function readProfilesDirectory(array $config): string
+{
     $profilesDirectoryAddress = $config['profiles']['address'];
 
-    if(!is_dir($profilesDirectoryAddress)){
+    if (!is_dir($profilesDirectoryAddress)) {
         mkdir($profilesDirectoryAddress);
     }
 
@@ -77,31 +87,31 @@ function readProfilesDirectory(array $config): string {
 
     $result = "";
 
-    if(count($files) > 2){
-        foreach($files as $file){
-            if(in_array($file, ['.', '..']))
+    if (count($files) > 2) {
+        foreach ($files as $file) {
+            if (in_array($file, ['.', '..']))
                 continue;
-            
+
             $result .= $file . "\r\n";
         }
-    }
-    else {
+    } else {
         $result .= "Директория пуста \r\n";
     }
 
     return $result;
 }
 
-function readProfile(array $config): string {
+function readProfile(array $config): string
+{
     $profilesDirectoryAddress = $config['profiles']['address'];
 
-    if(!isset($_SERVER['argv'][2])){
+    if (!isset($_SERVER['argv'][2])) {
         return handleError("Не указан файл профиля");
     }
 
     $profileFileName = $profilesDirectoryAddress . $_SERVER['argv'][2] . ".json";
 
-    if(!file_exists($profileFileName)){
+    if (!file_exists($profileFileName)) {
         return handleError("Файл $profileFileName не существует");
     }
 
