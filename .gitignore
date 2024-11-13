@@ -6,3 +6,12 @@
 vendor
 composer.lock
 composer.phar
+
+# развернул через open server 6.0.0, добавил служебные файлы
+.osp
+.htaccess
+# команда для запуска php 8.3 через open server
+# osp on php-8.3
+
+# полезная документация
+# https://php.dragomano.ru/vozmozhnosti-open-server-panel-6/#sozdanie-proekta-na-nginx-php-fcgi-bez-apache
