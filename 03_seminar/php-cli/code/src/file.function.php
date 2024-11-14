@@ -36,7 +36,6 @@ function addFunction(array $config): string
         return handleError("Неверный формат даты");
     }
     $data = "$name,  $date\r\n";
-
     $fileHandler = fopen($address, 'a');
 
     if (fwrite($fileHandler, $data)) {
@@ -122,4 +121,76 @@ function readProfile(array $config): string
     $info .= "Фамилия: " . $contentArray['lastname'] . "\r\n";
 
     return $info;
+}
+
+function birthdayToDay(array $config): string
+{
+    $address = $config['storage']['address'];
+
+    if (!file_exists($address) || !is_readable($address)) {
+        return handleError("Файл не существует");
+    }
+
+    $fileHandler = fopen($address, 'r');
+
+    $result = "";
+
+    while (!feof($fileHandler)) {
+        $line = fgets($fileHandler);
+
+        $lineArray = explode(',', $line);
+
+        $date = trim($lineArray[1]);
+
+        $dateArray = explode('-', $date);
+
+        $month = $dateArray[1];
+        $day = $dateArray[0];
+
+        if ($month == date('m') && $day == date('d')) {
+            $result .= $line;
+        }
+    }
+
+
+    fclose($fileHandler);
+
+    if ($result == "") {
+        return "Сегодня никто не родился";
+    } else {
+        return $result;
+    }
+}
+
+function personSearch(array $config): string
+{
+    $address = $config['storage']['address'];
+
+    if (!file_exists($address) || !is_readable($address)) {
+        return handleError("Файл не существует");
+    }
+
+    $fileHandler = fopen($address, 'r');
+
+    $result = "";
+
+    while (!feof($fileHandler)) {
+        $line = fgets($fileHandler);
+
+        $lineArray = explode(', ', $line);
+
+        $name = trim($lineArray[0]);
+
+        if (str_contains($name, $_SERVER['argv'][2])) {
+            $result .= $line;
+        }
+    }
+
+    fclose($fileHandler);
+
+    if ($result == "") {
+        return "Ничего не найдено";
+    } else {
+        return $result;
+    }
 }

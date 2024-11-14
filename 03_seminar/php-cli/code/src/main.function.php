@@ -30,6 +30,8 @@ function parseCommand() : string {
             'read-profiles' => 'readProfilesDirectory',
             'read-profile' => 'readProfile',
             'help' => 'helpFunction',
+            'birthday-to-day' => 'birthdayToDay',
+            'delete' => 'profileDelete',
             default => 'helpFunction'
         };
     }
